@@ -4,11 +4,15 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
-             @include('partials/success')
 			<div class="panel panel-default">
-				<div class="panel-heading">Home</div>
+				<div class="panel-heading"> My account</div>
 				<div class="panel-body">
-				 <p>Welcome</p>
+			
+                    <ul>
+                        <li><a href="#">Edit profile</a> </li>
+                        <li><a href="#">Change password</a> </li>
+                    </ul>
+                    
                 </div>
 		</div>
 	</div>

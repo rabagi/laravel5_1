@@ -42,7 +42,7 @@ Route::get('register', [
 Route::post('register', 'Auth\AuthController@postRegister');
 
 Route::get('confirmation/{token}', [
-    'uses' => 'Auth\AuthController@getconfirmation',
+    'uses' => 'Auth\AuthController@getConfirmation',
     'as'   => 'confirmation'
         
 ]);
@@ -67,7 +67,31 @@ Route::group(['middleware' => 'auth'], function(){
     
     });
     
-} );
+    Route::group(['middleware'=> 'verified'], function(){
+        
+        Route::get('publish', function(){
+        
+            return view('publish');
+    
+        });
+    
+        Route::post('publish', function(){
+        
+            return Request::all();
+    
+        });
+        
+    });
+    
+
+
+    
+});
+
+
+
+
+
 
 
 
