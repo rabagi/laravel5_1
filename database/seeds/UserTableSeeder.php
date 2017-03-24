@@ -15,10 +15,11 @@ class UserTableSeeder extends Seeder
             DB::table('users')->truncate();
         
             factory(App\User::class)-> create([
-                'name' => 'Gio',
+                'name' => 'Giovanny',           
                 'role' => 'admin',
                 'email' => 'giovanny.rabagi@gmail.com',
-                'password' => bcrypt('admin')
+                'password' => bcrypt('admin'),
+                'active' => true
             ]);
             
             factory(App\User::class, 49)->create();

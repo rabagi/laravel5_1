@@ -3,13 +3,18 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
+
 class AuthController extends Controller
-{
+{   
+ 
+    
     /*
     |--------------------------------------------------------------------------
     | Registration & Login Controller
@@ -63,7 +68,14 @@ class AuthController extends Controller
         ]);
         
         $user -> role = 'user';
+        $user-> registration_token = str_random(40);
         $user -> save();
+        
+        $url = route('confirmation', [ 'token' => $user-> registration_token]);
+        
+        Mail::send('emails/registration', compact('user', 'url'), function ($m) use ($user){
+            $m->to($user->email, $user->name)->subject('Activa tu cuenta');
+        });
         
         return $user;
     }
@@ -87,6 +99,53 @@ class AuthController extends Controller
     {
         return route('home');
     }
+    
+        /**
+     * Get the needed authorization credentials from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+
+    public function postRegister(Request $request)
+    {
+        $validator = $this->validator($request->all());
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
+        $user = $this->create($request->all());
+
+        return redirect()->route('login') 
+           ->with('alert', 'Confirma tu email: ' . $user->email) ;
+    }
+    
+    protected function getConfirmation($token){
+        
+        $user = User::where('registration_token', $token)->firstOrfail();
+        $user->registration_token = null;
+        $user->save();
+        
+        return redirect()->route('login') 
+           ->with('alert', 'Email confirmado, ahora puedes iniciar sesion') ;
+    }
+    
+    
+    public function getCredentials($request){
+        
+        return [
+            'email' =>   $request->get('email'),
+            'password' => $request->get('password'),
+            'registration_token' => null
+            
+        ];
+        
+    }
+    
+    
 
     
 }

@@ -107,7 +107,8 @@ return [
 
     'attributes' => [
         'email' => 'E-mail',
-        'password' => 'Password'
+        'password' => 'Password',
+        'username' => 'Usuario',
     ],
 
 ];
